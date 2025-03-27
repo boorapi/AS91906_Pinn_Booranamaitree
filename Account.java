@@ -18,7 +18,7 @@ public class Account
     private double balance;
 
     int lineCount = 0;
-    int theAccount = 0;
+    int accountIndex = -1;
     ArrayList<String> accountArray = new ArrayList<String>();
     //this constructure methode will take in a name and then find the account info under that given name.
     public Account (String name){
@@ -30,12 +30,16 @@ public class Account
                 lineCount++;
             }
 
-            int x = -1;
+            boolean keepCounting = true;
             for (String account : accountArray){
                 String[] value = account.split(",");
-                x++;
+                if(keepCounting){
+                    accountIndex++;
+                }
+                
                 for (int i=0; i<5; i++){
                     if(value[i].equals(name)){
+                        keepCounting = false;
                         switch(i){
                                case 0 : this.name = value[i];
                                 break;
@@ -55,6 +59,10 @@ public class Account
             e.printStackTrace();
         }
     }   
+    
+    public void flushAccount(){
+        accountArray.set(accountIndex, name+", "+addres+", "+accountNum+", "+accountType+", "+balance+"");
+    }
     
     public Double withdrawal(Double amount){
         balance = balance-amount;
