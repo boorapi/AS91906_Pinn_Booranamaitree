@@ -36,23 +36,14 @@ public class Account
                 if(keepCounting){
                     accountIndex++;
                 }
-                
-                for (int i=0; i<5; i++){
-                    if(value[i].equals(name)){
-                        keepCounting = false;
-                        switch(i){
-                               case 0 : this.name = value[i];
-                                break;
-                            case 1 : this.addres = value[i];
-                                break;
-                            case 2 : this.accountNum = value[i];
-                                break;
-                            case 3 : this.accountType = value[i];
-                                break;
-                            case 4 : this.balance = Double.valueOf(value[i]);
-                                 break;
-                        }
-                    }
+            
+                if(value[0].equals(name)){
+                    keepCounting = false;
+                    this.name = value[0];
+                    this.addres = value[1];
+                    this.accountNum = value[2];
+                    this.accountType = value[3];
+                    this.balance = Double.valueOf(value[4]); 
                 }
             }
         } catch (IOException e){
