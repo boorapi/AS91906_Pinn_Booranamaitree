@@ -55,7 +55,7 @@ public class Account
     
     //This method takes in name, addres, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current.
     //It will genarate account number and safe the new data to the arraylist.
-    public void createAccount(String name, String adress, int type){
+    public static String createAccount(String name, String adress, int type, int numOfAccount){
         Random random = new Random();
         String accountType;
         switch (type){
@@ -67,8 +67,14 @@ public class Account
                 break;
             default: accountType = "Unknown";
         }
-        String accountNum = "08-0101";
-        String data = (name+","+adress+","+accountNum+","+accountType+","+"0.00");
+        String accountNum = "08-0101-";
+        for (int i=0; i<7; i++){
+            int j = random.nextInt(9);
+            accountNum = accountNum+j;
+        }
+        accountNum = accountNum + "-00";
+        String data = (name+","+adress+","+accountNum+","+accountType+","+"0.00"); 
+        return data;
     }
     
     public void flushAccount(){
