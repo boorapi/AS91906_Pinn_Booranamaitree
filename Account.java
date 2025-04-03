@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 public class Account
 {   private String name;
     private String addres;
@@ -51,8 +52,28 @@ public class Account
         }
     }   
     
+    
+    //This method takes in name, addres, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current.
+    //It will genarate account number and safe the new data to the arraylist.
+    public void createAccount(String name, String adress, int type){
+        Random random = new Random();
+        String accountType;
+        switch (type){
+            case 1 : accountType = "Everyday";
+                break;
+            case 2 : accountType = "Savings";
+                break;
+            case 3 : accountType = "Current";
+                break;
+            default: accountType = "Unknown";
+        }
+        String accountNum = "08-0101";
+        String data = (name+","+adress+","+accountNum+","+accountType+","+"0.00");
+    }
+    
     public void flushAccount(){
-        accountArray.set(accountIndex, name+", "+addres+", "+accountNum+", "+accountType+", "+balance+"");
+        String data = name+","+addres+","+accountNum+","+accountType+","+balance+"";
+        accountArray.set(accountIndex, data);
     }
     
     public Double withdrawal(Double amount){
