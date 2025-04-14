@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 public class Account
 {   private String name;
     private String addres;
@@ -21,7 +22,7 @@ public class Account
     int accountIndex = -1;
     ArrayList<String> accountArray = new ArrayList<String>();
     //this constructure methode will take in a name and then find the account info under that given name.
-    public Account (String name){
+    public Account (String name, String accountNume){
         File accountFile = new File("AccountData.csv");
         try{
             Scanner readFile = new Scanner(accountFile);
@@ -51,8 +52,34 @@ public class Account
         }
     }   
     
+    
+    //This method takes in name, addres, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current.
+    //It will genarate account number and safe the new data to the arraylist.
+    public static String createAccount(String name, String adress, int type, int numOfAccount){
+        Random random = new Random();
+        String accountType;
+        switch (type){
+            case 1 : accountType = "Everyday";
+                break;
+            case 2 : accountType = "Savings";
+                break;
+            case 3 : accountType = "Current";
+                break;
+            default: accountType = "Unknown";
+        }
+        String accountNum = "08-0101-";
+        for (int i=0; i<7; i++){
+            int j = random.nextInt(9);
+            accountNum = accountNum+j;
+        }
+        accountNum = accountNum + "-00";
+        String data = (name+","+adress+","+accountNum+","+accountType+","+"0.00"); 
+        return data;
+    }
+    
     public void flushAccount(){
-        accountArray.set(accountIndex, name+", "+addres+", "+accountNum+", "+accountType+", "+balance+"");
+        String data = name+","+addres+","+accountNum+","+accountType+","+balance+"";
+        accountArray.set(accountIndex, data);
     }
     
     public Double withdrawal(Double amount){
