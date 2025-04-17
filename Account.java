@@ -11,18 +11,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.io.FileWriter; //to write file
 public class Account
 {   private String name;
-    private String addres;
+    private String address;
     private String accountNum;
     private String accountType;
     private double balance;
 
     int lineCount = 0;
     int accountIndex = -1;
+    int sameName = 0; //This variable will keep track on how many account is under the name 
+    //so I can assign account number correctly
     ArrayList<String> accountArray = new ArrayList<String>();
     //this constructure methode will take in a name and then find the account info under that given name.
-    public Account (String name, String accountNume){
+    public Account (String name, String num){
         File accountFile = new File("AccountData.csv");
         try{
             Scanner readFile = new Scanner(accountFile);
@@ -37,11 +40,18 @@ public class Account
                 if(keepCounting){
                     accountIndex++;
                 }
-            
+                
+                //check for same name. if there is no account under this name last digit is 00 if there 
+                //is already 1 account, last digit will be 01, if theres 2 = 02 and so on.
                 if(value[0].equals(name)){
+                    sameName++;
+                }
+                
+                //if the name is the same and the account number are the same.
+                if(value[0].equals(name) && value[2].equals(num)){
                     keepCounting = false;
                     this.name = value[0];
-                    this.addres = value[1];
+                    this.address = value[1];
                     this.accountNum = value[2];
                     this.accountType = value[3];
                     this.balance = Double.valueOf(value[4]); 
@@ -53,9 +63,9 @@ public class Account
     }   
     
     
-    //This method takes in name, addres, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current.
+    //This method takes in name, address, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current, and boolean to check if there already existing account.
     //It will genarate account number and safe the new data to the arraylist.
-    public static String createAccount(String name, String adress, int type, int numOfAccount){
+    public String createAccount(String name, String address, int type, boolean alreadyHaveAccount){
         Random random = new Random();
         String accountType;
         switch (type){
@@ -72,13 +82,47 @@ public class Account
             int j = random.nextInt(9);
             accountNum = accountNum+j;
         }
-        accountNum = accountNum + "-00";
-        String data = (name+","+adress+","+accountNum+","+accountType+","+"0.00"); 
-        return data;
+        
+        if(alreadyHaveAccount){
+            String[] value = accountNum.split("-");
+            String i = value[3];
+            int lastNum = Integer.parseInt(i);
+            lastNum++;
+            i = Integer.toString(lastNum);
+            //need a loop to check account that have highest last digit.
+            if(lastNum>9){
+                accountNum = accountNum+"-"+i;
+            } else{
+                accountNum =accountNum+"-0"+i;
+            }
+        } else{
+            accountNum = accountNum + "-00";
+        }
+        
+        String data = (name+","+address+","+accountNum+","+accountType+","+"0.00"); 
+        accountArray.add(data);
+        return accountNum();
+    }
+    
+    //If I call this method it will rewrite all the updated data to the account .csv file
+    public void writeToFile(){
+        File accountFile = new File("AccountData.csv");
+        // String variable called newLine, which will allow me to create new without using \n
+        String newLine = System.getProperty("line.separator");
+        try{
+            FileWriter writer = new FileWriter(accountFile);
+            for(String element : accountArray){
+                writer.write(element+newLine);
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
     
     public void flushAccount(){
-        String data = name+","+addres+","+accountNum+","+accountType+","+balance+"";
+        String data = name+","+address+","+accountNum+","+accountType+","+balance+"";
         accountArray.set(accountIndex, data);
     }
     
@@ -96,8 +140,8 @@ public class Account
         return name;
     }
     
-    public String addres(){
-        return addres;
+    public String address(){
+        return address;
     }
     
     public String accountNum(){

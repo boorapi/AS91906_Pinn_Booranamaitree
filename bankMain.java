@@ -58,20 +58,42 @@ public class bankMain
         while(!done){
             System.out.println("Please type in your name.");
             String name = keyboard.nextLine();
-            Account userAccount = new Account(name, "accountNum");
+            Account userAccount = new Account(name, "08-0101-0423087-00");
             
             
             if(userAccount.name() == null){
                 System.out.println("There is no account under this name. Please choose your opption\n1) to retype the name\n2)Create a new account under this name");
                 int x  = getIntInRange(1, 2);
                 if( x == 2){
-                    //make new account
+                    System.out.println("please enter your address. Make sure not to put any comma.");
+                    String address = keyboard.nextLine();
+                    System.out.println("Please choose account type, the option are\n1)Everyday\n2)Saving\n3)Current\nchoose by typing the number accordingly");
+                    int choice = getIntInRange(1, 3);
+                    String type;
+                    switch (choice){
+                        case 1 : type = "Everyday";
+                            break;
+                        case 2 : type = "Savings";
+                            break;
+                        case 3 : type = "Current";
+                            break;
+                        default: type = "Unknown";
+                    }
+                    System.out.println(name+" "+address+" "+type);
+                    System.out.println("If the information above is correct please type 1 to proceed, or 2 to redo.");
+                    int proceed = getIntInRange(1, 2);
+                    if(proceed == 1){
+                        Account tempAccount = new Account("", "");
+                        String num = tempAccount.createAccount(name, address, choice, false);
+                        System.out.println("Your account number is "+num+" please write this down for next time.");
+                        done = true;
+                    }
+                    
                 } 
-                
             } 
             else {  
                 boolean finish = false;
-                System.out.println("Hi "+name+"! Welcome to your account.\nname: "+userAccount.name()+"\naddres: "+userAccount.addres());
+                System.out.println("Hi "+name+"! Welcome to your account.\nname: "+userAccount.name()+"\naddres: "+userAccount.address());
                 System.out.println("Account number: "+userAccount.accountNum()+"\nAccount type; "+userAccount.accountType()+"\nBalance: "+userAccount.balance());
                 while(!finish){    
                     System.out.println("\nWhat would you like to do.\n1)Create new account under your name.\n2)Deposit\n3)Withdraw");
@@ -83,7 +105,7 @@ public class bankMain
                         System.out.println("Please type the amount that you wish to deposit.");
                         double amount = getDouble();
                         System.out.println("Your current balance is " + userAccount.deposit(amount));
-                        //type 1 if you are done or 2 to bla bla bla.
+                        userAccount.flushAccount();
                     } 
                     else{
                         System.out.println("Please type the amount that you wish to withdraw.");
@@ -107,23 +129,25 @@ public class bankMain
                                 System.out.println("You now have " +userAccount.balance()+ "$ remaining in your account");
                             }
                         }
+                        userAccount.flushAccount();
                     }
                     
-                    System.out.println("\nPlese type\n1) If you wich to do more transaction\n2) If you are done\n3)Back to home page");
+                    System.out.println("\nPlese type\n1)If you wich to do more transaction\n2)Back to home page\n3)If you are done");
                     int y = getIntInRange(1, 3);
                     if (y==2){
                         finish = true;
-                        done = true;
-                        System.out.println(userAccount.name());
-                        System.out.println(userAccount.addres());
-                        System.out.println(userAccount.balance());
+                        //System.out.print('\u000C');//clear screen
                     } else if (y==3){
                         finish = true;
-                        //clear screen;
+                        done = true;
+                        System.out.println(userAccount.name());
+                        System.out.println(userAccount.address());
+                        System.out.println(userAccount.balance());
                     }
                 }
             }
-            //userAccount.flushAccount();
+            userAccount.writeToFile();
         }
+        System.out.println("\nThank you for using  Kawaii bank and we hope to see you again soon!");
     }
 }
