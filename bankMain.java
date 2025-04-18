@@ -58,37 +58,41 @@ public class bankMain
         while(!done){
             System.out.println("Please type in your name.");
             String name = keyboard.nextLine();
-            Account userAccount = new Account(name, "08-0101-0423087-00");
+            Account userAccount = new Account(name, "08-0101-0423012-04");
             
             
             if(userAccount.name() == null){
                 System.out.println("There is no account under this name. Please choose your opption\n1) to retype the name\n2)Create a new account under this name");
                 int x  = getIntInRange(1, 2);
                 if( x == 2){
-                    System.out.println("please enter your address. Make sure not to put any comma.");
-                    String address = keyboard.nextLine();
-                    System.out.println("Please choose account type, the option are\n1)Everyday\n2)Saving\n3)Current\nchoose by typing the number accordingly");
-                    int choice = getIntInRange(1, 3);
-                    String type;
-                    switch (choice){
-                        case 1 : type = "Everyday";
-                            break;
-                        case 2 : type = "Savings";
-                            break;
-                        case 3 : type = "Current";
-                            break;
-                        default: type = "Unknown";
+                    boolean notProceed = true;
+                    while(notProceed){
+                        System.out.println("Please enter your name");
+                        String userName = keyboard.nextLine();
+                        System.out.println("Please enter your address. Make sure not to put any comma.");
+                        String address = keyboard.nextLine();
+                        System.out.println("Please choose account type, the option are\n1)Everyday\n2)Saving\n3)Current\nchoose by typing the number accordingly");
+                        int choice = getIntInRange(1, 3);
+                        String type;
+                        switch (choice){
+                            case 1 : type = "Everyday";
+                                break;
+                            case 2 : type = "Savings";
+                                break;
+                            case 3 : type = "Current";
+                                break;
+                            default: type = "Unknown";
+                        }
+                        System.out.println(userName+", "+address+", "+type);
+                        System.out.println("If the information above is correct please type 1 to proceed, or 2 to redo.");
+                        int i = getIntInRange(1, 2);
+                        if(i == 1){
+                            notProceed = false;
+                            String num = userAccount.createAccount(userName, address, choice, false);
+                            System.out.println("Your account number is "+num+" please write this down for next time.");
+                        }
                     }
-                    System.out.println(name+" "+address+" "+type);
-                    System.out.println("If the information above is correct please type 1 to proceed, or 2 to redo.");
-                    int proceed = getIntInRange(1, 2);
-                    if(proceed == 1){
-                        Account tempAccount = new Account("", "");
-                        String num = tempAccount.createAccount(name, address, choice, false);
-                        System.out.println("Your account number is "+num+" please write this down for next time.");
-                        done = true;
-                    }
-                    
+                    done = true;  
                 } 
             } 
             else {  
@@ -99,7 +103,10 @@ public class bankMain
                     System.out.println("\nWhat would you like to do.\n1)Create new account under your name.\n2)Deposit\n3)Withdraw");
                     int x = getIntInRange(1, 3);
                     if(x==1){
-                        //genarate new account
+                        System.out.println("Please choose account type, the option are\n1)Everyday\n2)Saving\n3)Current\nchoose by typing the number accordingly");
+                        int choice = getIntInRange(1, 3);
+                        String num = userAccount.createAccount(userAccount.name(), userAccount.address(), choice, true);
+                        System.out.println("Your account number is "+num+" please write this down for next time."); 
                     } 
                     else if (x==2){
                         System.out.println("Please type the amount that you wish to deposit.");

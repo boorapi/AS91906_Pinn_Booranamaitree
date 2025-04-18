@@ -64,7 +64,7 @@ public class Account
     
     
     //This method takes in name, address, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current, and boolean to check if there already existing account.
-    //It will genarate account number and safe the new data to the arraylist.
+    //It will genarate account number and save the new data to the arraylist.
     public String createAccount(String name, String address, int type, boolean alreadyHaveAccount){
         Random random = new Random();
         String accountType;
@@ -77,31 +77,40 @@ public class Account
                 break;
             default: accountType = "Unknown";
         }
-        String accountNum = "08-0101-";
+        String accountNumber = "08-0101-";
         for (int i=0; i<7; i++){
             int j = random.nextInt(9);
-            accountNum = accountNum+j;
+            accountNumber = accountNumber+j;
         }
         
         if(alreadyHaveAccount){
-            String[] value = accountNum.split("-");
-            String i = value[3];
-            int lastNum = Integer.parseInt(i);
-            lastNum++;
-            i = Integer.toString(lastNum);
-            //need a loop to check account that have highest last digit.
-            if(lastNum>9){
-                accountNum = accountNum+"-"+i;
+            int x = 0;
+            //A loop to check account that have highest last digit and that is under the same name.
+            for (String account : accountArray){
+                String[] split = account.split(",");
+                //If the account is under this name
+                if(split[0].equals(name)){
+                    String num = split[2];
+                    String[] value = num.split("-");
+                    String i = value[3];
+                    int lastNum = Integer.parseInt(i);
+                    if(lastNum>x){
+                        x = lastNum;
+                    }
+                }
+            }
+            x++;
+            if(x>9){
+                accountNumber = accountNumber+"-"+x;
             } else{
-                accountNum =accountNum+"-0"+i;
+                accountNumber =accountNumber+"-0"+x;
             }
         } else{
-            accountNum = accountNum + "-00";
+            accountNumber = accountNumber + "-00";
         }
-        
-        String data = (name+","+address+","+accountNum+","+accountType+","+"0.00"); 
+        String data = (name+","+address+","+accountNumber+","+accountType+","+"0.00"); 
         accountArray.add(data);
-        return accountNum();
+        return accountNumber;
     }
     
     //If I call this method it will rewrite all the updated data to the account .csv file
