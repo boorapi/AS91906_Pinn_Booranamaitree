@@ -12,60 +12,56 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.io.FileWriter; //to write file
-public class Account
-{   private String name;
+public class Account {
+    private String name;
     private String address;
     private String accountNum;
     private String accountType;
     private double balance;
 
-    int lineCount = 0;
     int accountIndex = -1;
-    int sameName = 0; //This variable will keep track on how many account is under the name 
     //so I can assign account number correctly
-    ArrayList<String> accountArray = new ArrayList<String>();
+    private static ArrayList<String> accountArray = new ArrayList<String>();
+    private static boolean loaded = false;
     //this constructure methode will take in a name and then find the account info under that given name.
-    public Account (String name, String num){
+    public static void loadAccount(){
         File accountFile = new File("AccountData.csv");
-        try{
-            Scanner readFile = new Scanner(accountFile);
-            while(readFile.hasNextLine()){
-                accountArray.add(readFile.nextLine());
-                lineCount++;
+        if(!loaded){
+            try{
+                Scanner readFile = new Scanner(accountFile);
+                while(readFile.hasNextLine()){
+                    accountArray.add(readFile.nextLine());
+                }
+            }catch(IOException e){
+                e.printStackTrace();
             }
-
-            boolean keepCounting = true;
-            for (String account : accountArray){
-                String[] value = account.split(",");
-                if(keepCounting){
-                    accountIndex++;
-                }
-                
-                //check for same name. if there is no account under this name last digit is 00 if there 
-                //is already 1 account, last digit will be 01, if theres 2 = 02 and so on.
-                if(value[0].equals(name)){
-                    sameName++;
-                }
-                
-                //if the name is the same and the account number are the same.
-                if(value[0].equals(name) && value[2].equals(num)){
-                    keepCounting = false;
-                    this.name = value[0];
-                    this.address = value[1];
-                    this.accountNum = value[2];
-                    this.accountType = value[3];
-                    this.balance = Double.valueOf(value[4]); 
-                }
+        }
+        loaded = true;
+    }
+    
+    public Account (String name, String num){
+        boolean keepCounting = true;
+        for (String account : accountArray){
+            String[] value = account.split(",");
+            if(keepCounting){
+                accountIndex++;
             }
-        } catch (IOException e){
-            e.printStackTrace();
+                
+            //if the name is the same and the account number are the same.
+            if(value[0].toLowerCase().equals(name) && value[2].equals(num)){
+                keepCounting = false;
+                this.name = value[0];
+                this.address = value[1];
+                this.accountNum = value[2];
+                this.accountType = value[3];
+                this.balance = Double.valueOf(value[4]); 
+            }
         }
     }   
     
-    
     //This method takes in name, address, account type in int e.g.1 for Everyday 2 for Savings and 3 for Current, and boolean to check if there already existing account.
     //It will genarate account number and save the new data to the arraylist.
-    public String createAccount(String name, String address, int type, boolean alreadyHaveAccount){
+    public static String createAccount(String name, String address, int type){
         Random random = new Random();
         String accountType;
         switch (type){
@@ -83,30 +79,28 @@ public class Account
             accountNumber = accountNumber+j;
         }
         
-        if(alreadyHaveAccount){
-            int x = 0;
-            //A loop to check account that have highest last digit and that is under the same name.
-            for (String account : accountArray){
-                String[] split = account.split(",");
-                //If the account is under this name
-                if(split[0].equals(name)){
-                    String num = split[2];
-                    String[] value = num.split("-");
-                    String i = value[3];
-                    int lastNum = Integer.parseInt(i);
-                    if(lastNum>x){
-                        x = lastNum;
-                    }
+        int x = 0;
+        //A loop to check account that have highest last digit and that is under the same name.
+        for (String account : accountArray){
+            String[] split = account.split(",");
+            //If the account is under this name
+            if(split[0].toLowerCase().equals(name.toLowerCase())){
+                String num = split[2];
+                String[] value = num.split("-");
+                String i = value[3];
+                int lastNum = Integer.parseInt(i);
+                if(lastNum>x){
+                    x = lastNum;
                 }
             }
+        }
+        if(x>0){
             x++;
-            if(x>9){
-                accountNumber = accountNumber+"-"+x;
-            } else{
-                accountNumber =accountNumber+"-0"+x;
-            }
+        }
+        if(x>9){
+            accountNumber = accountNumber+"-"+x;
         } else{
-            accountNumber = accountNumber + "-00";
+            accountNumber =accountNumber+"-0"+x;
         }
         String data = (name+","+address+","+accountNumber+","+accountType+","+"0.00"); 
         accountArray.add(data);
@@ -114,7 +108,7 @@ public class Account
     }
     
     //If I call this method it will rewrite all the updated data to the account .csv file
-    public void writeToFile(){
+    public static void writeToFile(){
         File accountFile = new File("AccountData.csv");
         // String variable called newLine, which will allow me to create new without using \n
         String newLine = System.getProperty("line.separator");
