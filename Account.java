@@ -79,7 +79,7 @@ public class Account {
         String accountNumber = "08-0101-";
         //addpend 7 random digit to account number.
         for (int i=0; i<7; i++){
-            int j = random.nextInt(9);
+            int j = random.nextInt(10);
             accountNumber = accountNumber+j;
         }
         
