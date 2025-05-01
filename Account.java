@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.io.FileWriter; //to write file
 public class Account {
-    private static ArrayList<String> accountArray = new ArrayList<String>();//this array lit will store all the user information.
+    private static ArrayList<String> accountArray = new ArrayList<String>();//this array list will store all the user information.
+    
     //This method will load all the data from csv file to "accountArray" ArrayList.
     //It would only run once when the program start.
+    //*This method will be called at the start of the program only*
     public static void loadAccount(){
         File accountFile = new File("AccountData.csv");//create new file object called accountFile. 
         try{
@@ -35,6 +37,7 @@ public class Account {
     private String accountType;
     private double balance;
     private int accountIndex = -1;//This value will keep track of which index that particular account element is in.
+    
     //this constructure methode will take in a name and account number and then get the account information under the name.
     public Account (String name, String num){
         boolean keepCounting = true;
@@ -133,19 +136,32 @@ public class Account {
         }
     }
     
+    private static double total;//keep track of all the money in the bank
+    //This method will return the totall amount of money in the bank 
+    //*This method will have to be call only at the end of the program, when all the data are update*
+    public static Double totalCash(){
+        //Loop through every account and add all the money to
+        for(String account : accountArray){
+            String[] split = account.split(",");
+            total += Double.valueOf(split[4]);//last value is the money
+        }
+        return total;
+    }
     // Updates the accountArray using its account index with the latest data from the object
     public void flushAccount(){
         String data = name+","+address+","+accountNum+","+accountType+","+balance+"";
         accountArray.set(accountIndex, data);
-    }
-    
-    // Subtracts the withdrawal amount from the account balance and returns the new balance
+    } 
+    //Subtracts the withdrawal amount from the account balance and returns the new balance
     public Double withdrawal(Double amount){
         balance = balance-amount;
         return balance;
     }
-    
-    // adds the deposit amount to the account balance and returns the new balance
+    //This method will remove an account (close account)
+    public void closeAccount(){
+        accountArray.remove(accountIndex);
+    }
+    //adds the deposit amount to the account balance and returns the new balance
     public Double deposit(Double amount){
         balance = balance+amount;
         return balance;
