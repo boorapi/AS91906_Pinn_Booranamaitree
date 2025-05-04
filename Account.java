@@ -1,10 +1,12 @@
 
 /**
- * Write a description of class Account here.
  *
- * @author (your name)
- * @version (a version number or a date)
- * This class will read the user acount, create user account, and  return all the data.
+ * Pinn Booranamaitree
+ * 
+ * This class will read the csv file and store it in arrayList. It will create account object(s)
+ * by getting name and account number parameter, then check which element in the arrayList
+ * contain that particular user data. After that it return all the data. This class also write the arrayList to csv file,
+ * generate account number, and deposite and withdrawal from the balance.
  */
 import java.util.Scanner;
 import java.io.File;

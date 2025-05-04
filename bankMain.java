@@ -1,8 +1,7 @@
 /**
- * Write a description of class bankMain here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * Pinn Booranamaitree
+ * This is a main class that runs everything. It create a account object from Account class.
  */
 import java.util.Scanner;
 public class bankMain{
@@ -316,8 +315,8 @@ public class bankMain{
         System.out.println("Total deposits: " + totalDeposits);
         System.out.println("Total withdrawals: " + totalWithdrawals);
         System.out.println("Net change: " + netChange);
-        System.out.println("Total cash in the bank:" + totalCash);
+        System.out.println("Total cash in the bank: " + totalCash);
         
-        System.out.println("Thank you for using  Kawaii bank and we hope to see you again soon!");
+        System.out.println("Thank you for using  Kawaii bank. Have a nice day!");
     }
 }
